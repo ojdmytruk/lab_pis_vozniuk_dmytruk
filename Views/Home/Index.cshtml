@@ -1,0 +1,185 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div id="tableBlock"></div>
+
+<br />
+<br />
+<p><a href="YouTube">Застосування підключеного Google.Apis.YouTube.v3</a></p>
+
+
+
+<div id="editBlock">
+    <p><b>Редагування інформації про студента</b></p>
+    <table>
+        <tr><td><input type="hidden" id="editId" /></td><td></td></tr>
+        <tr><td><label>Ім`я: </label></td><td><input type="text" id="editName" /></td></tr>
+        <tr><td><label>Факультет: </label></td><td><input type="text" id="editFaculty" /></td></tr>
+        <tr><td><label>Рік народження: </label></td><td><input type="number" id="editBirthYear" /></td></tr>
+        <tr><td><label>Гуртожиток: </label></td><td><input type="number" id="editDormitory" /></td></tr>
+        <tr><td><label>Кімната: </label></td><td><input type="number" id="editRoom" /></td></tr>
+    </table>
+    <a> <button id="editStudent">Зберегти</button></a>
+</div>
+<div id="createBlock">
+    <p><b>Додавання студента</b></p>
+    <table>
+        <tr><td><input type="hidden" id="editId" /></td><td></td></tr>
+        <tr><td><label>Ім`я: </label></td><td><input type="text" id="addName" /></td></tr>
+        <tr><td><label>Факультет: </label></td><td><input type="text" id="addFaculty" /></td></tr>
+        <tr><td><label>Рік народження: </label></td><td><input type="number" id="addBirthYear" /></td></tr>
+        <tr><td><label>Гуртожиток: </label></td><td><input type="number" id="addDormitory" /></td></tr>
+        <tr><td><label>Кімната: </label></td><td><input type="number" id="addRoom" /></td></tr>
+    </table>
+    <a><button id="addStudent">Зберегти</button></a>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            GetAllStudents();
+
+            $("#editStudent").click(function (event) {
+                event.preventDefault();
+                EditStudent();
+            });
+
+            $("#addStudent").click(function (event) {
+                event.preventDefault();
+                AddStudent();
+            });
+
+        });
+
+        function GetAllStudents() {
+
+            $("#createBlock").css('display', 'block');
+            $("#editBlock").css('display', 'none');
+            $.ajax({
+                url: '/api/values',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    WriteResponse(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        function AddStudent() {
+            var student = {
+                Name: $('#addName').val(),
+                Faculty: $('#addFaculty').val(),
+                BirthYear: $('#addBirthYear').val(),
+                Dormitory: $('#addDormitory').val(),
+                Room: $('#addRoom').val()
+            };
+
+            $.ajax({
+                url: '/api/values/',
+                type: 'POST',
+                data: JSON.stringify(student),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllStudents();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        function DeleteStudent(id) {
+
+            $.ajax({
+                url: '/api/values/' + id,
+                type: 'DELETE',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllStudents();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        function EditStudent() {
+            var id = $('#editId').val()
+            var student = {
+                Id: $('#editId').val(),
+                Name: $('#editName').val(),
+                Faculty: $('#editFaculty').val(),
+                BirthYear: $('#editBirthYear').val(),
+                Dormitory: $('#editDormitory').val(),
+                Room: $('#editRoom').val()
+            };
+            $.ajax({
+                url: '/api/values/' + id,
+                type: 'PUT',
+                data: JSON.stringify(student),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllStudents();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        function WriteResponse(students) {
+            var strResult = "<table><th>ID</th><th>Ім`я</th><th>Факультет</th><th>Рік народження</th><th>Гуртожиток</th><th>Кімната</th>";
+            $.each(students, function (index, student) {
+                strResult += "<tr><td>" + student.Id + "</td><td> " + student.Name + "</td><td>" +
+                    student.Faculty + "</td><td>" + student.BirthYear + "</td><td>" + student.Dormitory + "</td><td>" + student.Room +
+                    "</td><td><a id='editItem' data-item='" + student.Id + "' onclick='EditItem(this);' >Редагувати</a></td>" +
+                    "<td><a id='delItem' data-item='" + student.Id + "' onclick='DeleteItem(this);' >Видалити</a></td></tr>";
+            });
+            strResult += "</table>";
+            $("#tableBlock").html(strResult);
+
+        }
+        function DeleteItem(el) {
+            var id = $(el).attr('data-item');
+            DeleteStudent(id);
+        }
+        function EditItem(el) {
+            var id = $(el).attr('data-item');
+            GetStudent(id);
+        }
+        function ShowStudent(student) {
+            if (student != null) {
+                $("#createBlock").css('display', 'none');
+                $("#editBlock").css('display', 'block');
+                $("#editId").val(student.Id);
+                $("#editName").val(student.Name);
+                $("#editFaculty").val(student.Faculty);
+                $("#editBirthYear").val(student.BirthYear);
+                $("#editDormitory").val(student.Dormitory);
+                $("#editRoom").val(student.Room);
+            }
+            else {
+                alert("Такого студента не существует");
+            }
+        }
+
+        function GetStudent(id) {
+            $.ajax({
+                url: '/api/values/' + id,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    ShowStudent(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+    </script>
+
+}
+
+

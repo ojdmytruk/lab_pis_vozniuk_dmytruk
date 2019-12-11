@@ -1,0 +1,18 @@
+﻿@model IEnumerable<List<string>>
+@{
+    ViewBag.Title = "YouTube";
+}
+
+<table class="table">
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item)
+                </td>
+            </tr>
+        }
+
+    </table>
+

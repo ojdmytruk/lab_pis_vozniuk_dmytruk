@@ -1,0 +1,95 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+
+</head>
+<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+        body {
+            background-image: url(https://klike.net/uploads/posts/2019-06/1561182942_2.jpg);
+        }
+
+        h1 {
+            background-color: azure;
+        }
+
+        p {
+            background-color: azure;
+        }
+        footer{
+            width: 200px;
+        }
+        label {
+            background-color: azure;
+        }
+        button{
+            background-color: azure;
+        }
+        table{
+            background-color: azure;
+        }
+        font-face{
+            font-family: Oswald;
+        }
+       
+
+    </style>
+    <body>
+        <h1>Поселення студентів до гуртожитку</h1>
+
+        @*<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Головна", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Зовнішній сервіс", "YouTube", "Home", new { area = "" }, null)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>*@
+        <div class="container body-content">
+            @RenderBody()
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+            <footer>
+                <p>
+                    &copy; @DateTime.Now.Date - Web API 2 ASP.NET
+                    <br />
+                    Проектування інформаційних систем
+                    <br />
+                    Дмитрук Олеся, Вознюк Олександра
+                    <br />
+                    ІС-71
+                </p>
+            </footer>
+        </div>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+
+    </body>
+</html>
